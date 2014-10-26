@@ -1,0 +1,100 @@
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="page-header">
+				<h1>
+					User List
+				</h1>
+                                <br/>
+                                <div class="row clearfix" id="groups">
+                                        <div class="col-md-4 column">
+                                                <form class="form-horizontal" role="form">
+                                                        <div class="form-group">
+                                                            <label for="last_name" class="col-sm-4 control-label">Usergroup</label>
+                                                            <div class="col-sm-8">
+                                                              <select class="form-control" ng-options="x._id as x.title for x in groupChoices"
+                                                                      ng-model="currentGroupId"></select>
+                                                            </div>
+                                                        </div>
+                                                </form>                                          
+                                        </div>
+                                        <div class="col-md-4 column">
+                                              <label class="control-label">Group actions</label>&nbsp;&nbsp;
+                                              <div class="btn-group">
+                                                  <button class="btn btn-default" ng-click="onGroupNew()">New</button>
+                                                  <button class="btn btn-default" ng-click="onGroupEdit()"   ng-disabled="!currentGroupId">Edit</button>
+                                                  <button class="btn btn-default" ng-click="onGroupDelete()" ng-disabled="!currentGroupId">Delete</button>
+                                              </div>
+                                        </div>
+                                        <div class="col-md-4 column" ng-show="bufferGroup">
+                                              <div group-form id="groupForm"
+                                                   item="bufferGroup"
+                                                   on-save="onGroupSave()"
+                                                   on-cancel="onGroupCancel()"
+                                              ></div>
+                                        </div>
+                                </div>
+			</div>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-8 column">
+                        <div class="row" ng-show="!currentGroupId">
+                              <div class="col-md-6 column">
+                                    <label class="control-label">User actions</label>&nbsp;&nbsp;
+                                    <div class="btn-group">
+                                            <button class="btn btn-default" type="button" ng-click="onUserNew()">
+                                              <em class="glyphicon glyphicon-align-left"></em> New
+                                            </button>
+                                            <button class="btn btn-default" type="button" ng-click="onUserDelete()" ng-disabled="!selectedUserId">
+                                              <em class="glyphicon glyphicon-align-center"></em> Delete
+                                            </button>
+                                    </div>                          
+                              </div>
+                        </div>
+			<div class="row" ng-show="currentGroupId">
+                                <div class="col-md-6 column">
+                                      <form class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                                <label for="addusername" class="col-sm-4 control-label">User</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                      <input class="form-control" id="addusername" ng-model="addedUser"
+                                                             typeahead="x as x.full_name for x in users | filter:{full_name:$viewValue}"/>
+                                                      <span class="input-group-btn">
+                                                        <button class="btn btn-default" type="button" ng-click="onUserAdd()">
+                                                          <em class="glyphicon glyphicon-align-left"></em> Add
+                                                        </button>
+                                                      </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                      </form>
+                                </div>
+                                <div class="col-md-6 column">                                      
+                                      <button class="btn btn-default" type="button" ng-click="onUserRemove()" ng-disabled="!selectedUserId">
+                                        <em class="glyphicon glyphicon-align-center"></em>Remove
+                                      </button>
+                                </div>
+			</div>
+                        <br/>
+                        <br/>
+                        <div flip-table title="Users" id="users"
+                            list="displayUsers"
+                            columns="[
+                                {title:'Username',    attr:'username'  },
+                                {title:'Full Name',   attr:'full_name'  },
+                                {title:'Staff',       attr:'staff'  },
+                                {title:'Superuser',   attr:'superuser'},
+                            ]"
+                            selected-id="selectedUserId"
+                            init-sort="username"
+                        ></div>
+		</div>
+		<div class="col-md-4 column">
+                  <div user-form id="userForm" item="bufferUser" on-save="onUserSave()"></div>
+                  <div adduser-form></div>
+		</div>
+	</div>
+</div>             

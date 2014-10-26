@@ -13,6 +13,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+*.bat
 
 # =========================
 # Operating System Files
@@ -41,3 +42,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+node_modules
+vendor

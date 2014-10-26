@@ -1,0 +1,59 @@
+{
+    "users":[
+        {
+            "_id": 1,
+            "username": "brubble",
+            "first_name": "Barney",
+            "last_name": "Rubble",
+            "full_name": "Barney Rubble",
+            "superuser": true,
+            "staff": true
+        },
+        {
+            "_id": 2,
+            "username": "fflint",
+            "first_name": "Fred",
+            "last_name": "Flintstone",
+            "full_name": "Fred Flintstone",
+            "superuser": false,
+            "staff": false
+        },
+        {
+            "_id": 3,
+            "username": "bbunny",
+            "first_name": "Bugs",
+            "last_name": "Bunny",
+            "full_name": "Bugs Bunny",
+            "superuser": false,
+            "staff": true
+        },
+        {
+            "_id": 4,
+            "username": "wwoman",
+            "first_name": "Wonder",
+            "last_name": "Woman",
+            "full_name": "Wonder Woman",
+            "superuser": false,
+            "staff": false
+        }
+    ],
+    "usergroups":[
+        {
+            "_id": 1,
+            "name": "flintstones",
+            "title": "Flintstones Characters",
+            "users": [
+                {"_id": 1, "full_name": "Barney Rubble"},
+                {"_id": 2, "full_name": "Fred Flintstone"}
+            ]
+        },
+        {
+            "_id": 2,
+            "name": "looney_tunes",
+            "title": "Looney Tunes Characters",
+            "users": [
+                {"_id": 3, "full_name": "Bugs Bunny"}
+            ]
+        }
+    ]
+}
