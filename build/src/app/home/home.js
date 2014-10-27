@@ -133,13 +133,6 @@ angular.module('app.home', ['ui.router', 'ui.bootstrap', 'app.userform', 'app.gr
       return s.bufferUser = null;
     }
   });
-  s.onUserSelect = function(id) {
-    if (id === s.selectedUserId) {
-      return s.selectedUserId = null;
-    } else {
-      return s.selectedUserId = id;
-    }
-  };
   $scope.onUserNew = function() {
     $scope.selectedUserId = null;
     return $scope.bufferUser = flipDoc('users');
@@ -173,7 +166,7 @@ angular.module('app.home', ['ui.router', 'ui.bootstrap', 'app.userform', 'app.gr
   s.onUserRemove = function() {
     var grp, grp_ids;
     grp = idLookup(s.usergroups, s.currentGroupId);
-    grp_ids = idList(grp);
+    grp_ids = idList(grp.users);
     grp.users.splice(grp_ids.indexOf(s.selectedUserId), 1);
     return grp.$save().then(function() {
       s.addedUser = null;

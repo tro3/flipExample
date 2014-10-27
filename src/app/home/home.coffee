@@ -147,12 +147,6 @@ angular.module( 'app.home', [
       s.bufferUser = null
   )
 
-  s.onUserSelect = (id) ->
-    if id == s.selectedUserId
-      s.selectedUserId = null
-    else
-      s.selectedUserId = id
-
   $scope.onUserNew = () ->
     $scope.selectedUserId = null
     $scope.bufferUser = flipDoc('users')
@@ -187,7 +181,7 @@ angular.module( 'app.home', [
 
   s.onUserRemove = ->
     grp = idLookup(s.usergroups, s.currentGroupId)
-    grp_ids = idList(grp)
+    grp_ids = idList(grp.users)
     grp.users.splice(grp_ids.indexOf(s.selectedUserId), 1)
     grp.$save()
     .then( ->

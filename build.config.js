@@ -9,7 +9,7 @@ module.exports = {
    */
   build_dir: 'build',
   compile_dir: 'bin',
-  deploy_dir: '../server/app/static/users',
+  deploy_dir: '../../Flip/server/app/static/users',
 
   /**
    * This is a collection of file patterns that refer to our app code (the

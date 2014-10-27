@@ -21,7 +21,7 @@
                                         </div>
                                         <div class="col-md-4 column">
                                               <label class="control-label">Group actions</label>&nbsp;&nbsp;
-                                              <div class="btn-group">
+                                              <div class="btn-group" id="groupActions">
                                                   <button class="btn btn-default" ng-click="onGroupNew()">New</button>
                                                   <button class="btn btn-default" ng-click="onGroupEdit()"   ng-disabled="!currentGroupId">Edit</button>
                                                   <button class="btn btn-default" ng-click="onGroupDelete()" ng-disabled="!currentGroupId">Delete</button>
@@ -59,7 +59,7 @@
                                             <div class="form-group">
                                                 <label for="addusername" class="col-sm-4 control-label">User</label>
                                                 <div class="col-sm-8">
-                                                    <div class="input-group">
+                                                    <div class="input-group" id="userAdd">
                                                       <input class="form-control" id="addusername" ng-model="addedUser"
                                                              typeahead="x as x.full_name for x in users | filter:{full_name:$viewValue}"/>
                                                       <span class="input-group-btn">
@@ -77,6 +77,7 @@
                                         <em class="glyphicon glyphicon-align-center"></em>Remove
                                       </button>
                                 </div>
+				{{selectedUserId}}
 			</div>
                         <br/>
                         <br/>
@@ -93,7 +94,7 @@
                         ></div>
 		</div>
 		<div class="col-md-4 column">
-                  <div user-form id="userForm" item="bufferUser" on-save="onUserSave()"></div>
+                  <div user-form id="userForm" item="bufferUser" on-save="onUserSave()" on-cancel="onUserCancel()"></div>
                   <div adduser-form></div>
 		</div>
 	</div>

@@ -141,7 +141,7 @@ describe( 'home controller,', () ->
     )
 
     it('should set selectedUserId to new item id,
-       and clear buffer group on Save after New', () ->
+        and clear buffer group on Save after New', () ->
       @scope.onGroupNew()
       expect(@scope.bufferGroup).not.toBe(null)
       @scope.bufferGroup.name = 'gotham'
@@ -215,7 +215,7 @@ describe( 'home controller,', () ->
     
         it('should copy selection to the user buffer user
             on Select User', () ->
-          @scope.onUserSelect(4)
+          @scope.selectedUserId = 4
           @scope.$digest()
           expect(@scope.bufferUser.username).toBe('brubble')
         )
@@ -240,7 +240,8 @@ describe( 'home controller,', () ->
           @scope.onUserNew()
           expect(@scope.bufferUser).not.toBe(null)
           expect(@scope.bufferUser._id).toBe(undefined)
-          @scope.onUserSelect(4)
+          @scope.selectedUserId = 4
+          @scope.$digest()
           @scope.$digest()
           expect(@scope.bufferUser._id).toBe(4)
         )
@@ -282,7 +283,8 @@ describe( 'home controller,', () ->
         
         it('should copy selection to the user buffer user
             on Select User', () ->
-          @scope.onUserSelect(6)
+          @scope.selectedUserId = 6
+          @scope.$digest()
           @scope.$digest()
           expect(@scope.bufferUser.username).toBe('wwoman')
         )
@@ -329,7 +331,7 @@ describe( 'home controller,', () ->
 
     describe('with user selected', () ->
       beforeEach( () ->
-        @scope.onUserSelect(6)
+        @scope.selectedUserId = 6
         @scope.$digest()
       )
 
@@ -342,14 +344,14 @@ describe( 'home controller,', () ->
         )
 
         it('copies user to buffer if selected', () ->
-          @scope.onUserSelect(2)
+          @scope.selectedUserId = 2
           @scope.$digest()
           expect(@scope.selectedUserId).toBe(2)
           expect(@scope.displayUsers.length).toBe(3)
         )
         
         it('clears selected user if selected again', () ->
-          @scope.onUserSelect(6)
+          @scope.selectedUserId = null
           @scope.$digest()
           expect(@scope.selectedUserId).toBe(null)
           expect(@scope.bufferUser).toBe(null)
@@ -419,7 +421,8 @@ describe( 'home controller,', () ->
           @scope.currentGroupId = 2
           @scope.$digest()
           expect(@scope.displayUsers.length).toBe(1)
-          @scope.onUserSelect(6)
+          @scope.selectedUserId = 6
+          @scope.$digest()
           @scope.$digest()
         )
 
@@ -431,7 +434,7 @@ describe( 'home controller,', () ->
         )
 
         it('clears selected user if selected again', () ->
-          @scope.onUserSelect(6)
+          @scope.selectedUserId = null
           @scope.$digest()
           expect(@scope.selectedUserId).toBe(null)
           expect(@scope.bufferUser).toBe(null)

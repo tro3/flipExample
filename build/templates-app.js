@@ -49,7 +49,7 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "                                        </div>\n" +
     "                                        <div class=\"col-md-4 column\">\n" +
     "                                              <label class=\"control-label\">Group actions</label>&nbsp;&nbsp;\n" +
-    "                                              <div class=\"btn-group\">\n" +
+    "                                              <div class=\"btn-group\" id=\"groupActions\">\n" +
     "                                                  <button class=\"btn btn-default\" ng-click=\"onGroupNew()\">New</button>\n" +
     "                                                  <button class=\"btn btn-default\" ng-click=\"onGroupEdit()\"   ng-disabled=\"!currentGroupId\">Edit</button>\n" +
     "                                                  <button class=\"btn btn-default\" ng-click=\"onGroupDelete()\" ng-disabled=\"!currentGroupId\">Delete</button>\n" +
@@ -87,7 +87,7 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "                                            <div class=\"form-group\">\n" +
     "                                                <label for=\"addusername\" class=\"col-sm-4 control-label\">User</label>\n" +
     "                                                <div class=\"col-sm-8\">\n" +
-    "                                                    <div class=\"input-group\">\n" +
+    "                                                    <div class=\"input-group\" id=\"userAdd\">\n" +
     "                                                      <input class=\"form-control\" id=\"addusername\" ng-model=\"addedUser\"\n" +
     "                                                             typeahead=\"x as x.full_name for x in users | filter:{full_name:$viewValue}\"/>\n" +
     "                                                      <span class=\"input-group-btn\">\n" +
@@ -105,6 +105,7 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "                                        <em class=\"glyphicon glyphicon-align-center\"></em>Remove\n" +
     "                                      </button>\n" +
     "                                </div>\n" +
+    "				{{selectedUserId}}\n" +
     "			</div>\n" +
     "                        <br/>\n" +
     "                        <br/>\n" +
@@ -121,7 +122,7 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "                        ></div>\n" +
     "		</div>\n" +
     "		<div class=\"col-md-4 column\">\n" +
-    "                  <div user-form id=\"userForm\" item=\"bufferUser\" on-save=\"onUserSave()\"></div>\n" +
+    "                  <div user-form id=\"userForm\" item=\"bufferUser\" on-save=\"onUserSave()\" on-cancel=\"onUserCancel()\"></div>\n" +
     "                  <div adduser-form></div>\n" +
     "		</div>\n" +
     "	</div>\n" +
