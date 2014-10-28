@@ -9,6 +9,21 @@ class GroupForm
         @elem.isDisplayed()
 
 
+class UserForm
+    constructor: (@elem) ->
+        @username = @elem.element(By.model('item.username'))
+        @firstName = @elem.element(By.model('item.first_name'))
+        @lastName = @elem.element(By.model('item.last_name'))
+        @staff = @elem.element(By.model('item.staff'))
+        @superuser = @elem.element(By.model('item.superuser'))
+        @save = @elem.element(By.buttonText('Save'))
+        @cancel = @elem.element(By.buttonText('Cancel'))
+
+    isEnabled: () ->
+        @username.isEnabled()
+
+
+
 class UserPage
     constructor: () ->
         @groupSelect = element(By.model('currentGroupId'))
@@ -22,12 +37,25 @@ class UserPage
         @userAddButton = @userAdd.$('button')
         @userRemove = element(By.buttonText('Remove'))
         
+        @userNew = $('#userActions').element(By.buttonText('New'))
+        @userDelete = $('#userActions').element(By.buttonText('Delete'))
+        @userForm = new UserForm($('#userForm'))
         @userTable = $('#users')
         
     selectGroup: (ind) ->
         @groupSelect.click()
         @groupSelect.all(By.css('option')).get(ind+1).click()
         
+        
+    checkUserRow: (username) ->
+        @userTable.all(By.cssContainingText('tr', username)).count() > 0
+        
+    getUserRow: (username) ->
+        @userTable.element(By.cssContainingText('tr', username))
+
+    clickUserRow: (username) ->
+        row = @getUserRow(username)
+        row.click()
 
 
 describe('user page', () ->
@@ -40,7 +68,7 @@ describe('user page', () ->
         browser.driver.get(browser.baseUrl + '/_reset')
     )
 
-    xit('should allow group creation, cancellation, editing and deletion', () ->
+    it('should allow group creation, cancellation, editing and deletion', () ->
         form = @page.groupForm
         expect(form.isDisplayed()).toBe(false)
 
@@ -86,9 +114,43 @@ describe('user page', () ->
         @page.userAdd.$('a').click()
         @page.userAddButton.click()
         expect(@page.userTable.all(By.css('tr')).count()).toBe(4)
-        @page.userTable.element(By.cssContainingText('tr', 'Barney')).click()
+        @page.clickUserRow('brubble')
         @page.userRemove.click()
         expect(@page.userTable.all(By.css('tr')).count()).toBe(3)
-        expect(@page.userTable.all(By.cssContainingText('tr', 'Barney')).count()).toBe(0)
+        expect(@page.checkUserRow('brubble')).toBe(false)
     )
+
+    it('should allow user creation, cancellation, editing and deletion', () ->
+        form = @page.userForm
+        expect(form.isEnabled()).toBe(false)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(5)
+
+        @page.userNew.click()
+        expect(form.isEnabled()).toBe(true)
+        form.username.sendKeys('robin')
+        form.firstName.sendKeys('Boy')
+        form.lastName.sendKeys('Wonder')
+        form.cancel.click()
+        expect(form.isEnabled()).toBe(false)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(5)
+        expect(@page.checkUserRow('robin')).toBe(false)
+
+        @page.userNew.click()
+        expect(form.isEnabled()).toBe(true)
+        form.username.sendKeys('robin')
+        form.firstName.sendKeys('Boy')
+        form.lastName.sendKeys('Wonder')
+        form.save.click()
+        expect(form.isEnabled()).toBe(true)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(6)
+        #expect(@page.checkUserRow('robin')).toBe(true)
+        
+        #browser.pause()
+        #
+        #@page.clickUserRow('brubble')
+        #expect(form.isEnabled()).toBe(true)
+        #expect(form.username.getAttribute('value')).toBe('brubble')
+        
+    )
+
 )

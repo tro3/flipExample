@@ -69,7 +69,7 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "	<div class=\"row clearfix\">\n" +
     "		<div class=\"col-md-8 column\">\n" +
     "                        <div class=\"row\" ng-show=\"!currentGroupId\">\n" +
-    "                              <div class=\"col-md-6 column\">\n" +
+    "                              <div class=\"col-md-6 column\" id=\"userActions\">\n" +
     "                                    <label class=\"control-label\">User actions</label>&nbsp;&nbsp;\n" +
     "                                    <div class=\"btn-group\">\n" +
     "                                            <button class=\"btn btn-default\" type=\"button\" ng-click=\"onUserNew()\">\n" +
@@ -105,7 +105,6 @@ angular.module("home/home.tpl.html", []).run(["$templateCache", function($templa
     "                                        <em class=\"glyphicon glyphicon-align-center\"></em>Remove\n" +
     "                                      </button>\n" +
     "                                </div>\n" +
-    "				{{selectedUserId}}\n" +
     "			</div>\n" +
     "                        <br/>\n" +
     "                        <br/>\n" +
@@ -169,6 +168,7 @@ angular.module("userform/userform.tpl.html", []).run(["$templateCache", function
     "    <div class=\"form-group\">\n" +
     "        <div class=\"col-sm-offset-4 col-sm-8\">\n" +
     "            <button ng-disabled=\"disabled()\" type=\"submit\" class=\"btn btn-default\" ng-click=\"save()\">Save</button>\n" +
+    "            <button ng-disabled=\"disabled()\" type=\"submit\" class=\"btn btn-default\" ng-click=\"cancel()\">Cancel</button>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "</form>");
