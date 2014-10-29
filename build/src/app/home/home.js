@@ -12,7 +12,7 @@ angular.module('app.home', ['ui.router', 'ui.bootstrap', 'app.userform', 'app.gr
     }
   });
 }).controller('homeCtrl', function($scope, $q, flipList, flipDoc) {
-  var idList, idLookup, s, updateData, updateDisplay, updateUsergroups, updateUsers;
+  var idList, idLookup, newstate, s, updateData, updateDisplay, updateUsergroups, updateUsers;
   s = $scope;
   s.usergroups = flipList({
     collection: 'usergroups'
@@ -126,25 +126,30 @@ angular.module('app.home', ['ui.router', 'ui.bootstrap', 'app.userform', 'app.gr
   s.onGroupCancel = function() {
     return s.bufferGroup = null;
   };
+  newstate = false;
   s.$watch('selectedUserId', function() {
     if (s.selectedUserId) {
       return s.bufferUser = flipDoc(idLookup(s.users, s.selectedUserId));
+    } else if (newstate) {
+      return newstate = false;
     } else {
       return s.bufferUser = null;
     }
   });
   $scope.onUserNew = function() {
-    $scope.selectedUserId = null;
-    return $scope.bufferUser = flipDoc('users');
+    s.bufferUser = flipDoc('users');
+    if ($scope.selectedUserId !== null) {
+      newstate = true;
+    }
+    return $scope.selectedUserId = null;
   };
   $scope.onUserCancel = function() {
     $scope.selectedUserId = null;
-    return $scope.bufferUser = null;
+    return s.bufferUser = null;
   };
   $scope.onUserDelete = function() {
     return $scope.bufferUser.$delete().then(function() {
       $scope.selectedUserId = null;
-      $scope.bufferUser = null;
       return updateData();
     });
   };

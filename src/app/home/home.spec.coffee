@@ -210,6 +210,7 @@ describe( 'home controller,', () ->
       describe('with no group selected', () ->
         it('should create a blank buffer user on New', () ->
           @scope.onUserNew()
+          @scope.$digest()
           expect(@scope.bufferUser).not.toBe(null)
         )
     
@@ -222,13 +223,16 @@ describe( 'home controller,', () ->
     
         it('should blank the user buffer user on Cancel after New', () ->
           @scope.onUserNew()
+          @scope.$digest()
           expect(@scope.bufferUser).not.toBe(null)
           @scope.onUserCancel()
+          @scope.$digest()
           expect(@scope.bufferUser).toBe(null)
         )
     
         it('should blank the user buffer user on Select Group after New', () ->
           @scope.onUserNew()
+          @scope.$digest()
           expect(@scope.bufferUser).not.toBe(null)
           @scope.currentGroupId = 2
           @scope.$digest()
@@ -238,6 +242,7 @@ describe( 'home controller,', () ->
         it('should copy selection to the user buffer user
             on Select User after New', () ->
           @scope.onUserNew()
+          @scope.$digest()
           expect(@scope.bufferUser).not.toBe(null)
           expect(@scope.bufferUser._id).toBe(undefined)
           @scope.selectedUserId = 4
@@ -249,6 +254,7 @@ describe( 'home controller,', () ->
         it('should update users and select the new user
             on Save after New', () ->
           @scope.onUserNew()
+          @scope.$digest()
           @scope.bufferUser._id = 43
           @scope.onUserSave()
           @httpBackend.expectGET('/api/users').respond(200,
@@ -284,7 +290,6 @@ describe( 'home controller,', () ->
         it('should copy selection to the user buffer user
             on Select User', () ->
           @scope.selectedUserId = 6
-          @scope.$digest()
           @scope.$digest()
           expect(@scope.bufferUser.username).toBe('wwoman')
         )
@@ -360,6 +365,7 @@ describe( 'home controller,', () ->
 
         it('clears selected user and buffer on Cancel', () ->
           @scope.onUserCancel()
+          @scope.$digest()
           expect(@scope.selectedUserId).toBe(null)
           expect(@scope.bufferUser).toBe(null)
           expect(@scope.displayUsers.length).toBe(3)
@@ -443,6 +449,7 @@ describe( 'home controller,', () ->
 
         it('clears selected user and buffer on Cancel', () ->
           @scope.onUserCancel()
+          @scope.$digest()
           expect(@scope.selectedUserId).toBe(null)
           expect(@scope.bufferUser).toBe(null)
           expect(@scope.displayUsers.length).toBe(1)

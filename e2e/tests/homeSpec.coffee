@@ -48,7 +48,7 @@ class UserPage
         
         
     checkUserRow: (username) ->
-        @userTable.all(By.cssContainingText('tr', username)).count() > 0
+        @userTable.element(By.cssContainingText('tr', username)).isPresent()
         
     getUserRow: (username) ->
         @userTable.element(By.cssContainingText('tr', username))
@@ -124,7 +124,7 @@ describe('user page', () ->
         form = @page.userForm
         expect(form.isEnabled()).toBe(false)
         expect(@page.userTable.all(By.css('tr')).count()).toBe(5)
-
+        
         @page.userNew.click()
         expect(form.isEnabled()).toBe(true)
         form.username.sendKeys('robin')
@@ -134,7 +134,7 @@ describe('user page', () ->
         expect(form.isEnabled()).toBe(false)
         expect(@page.userTable.all(By.css('tr')).count()).toBe(5)
         expect(@page.checkUserRow('robin')).toBe(false)
-
+        
         @page.userNew.click()
         expect(form.isEnabled()).toBe(true)
         form.username.sendKeys('robin')
@@ -143,14 +143,34 @@ describe('user page', () ->
         form.save.click()
         expect(form.isEnabled()).toBe(true)
         expect(@page.userTable.all(By.css('tr')).count()).toBe(6)
-        #expect(@page.checkUserRow('robin')).toBe(true)
+        expect(@page.checkUserRow('robin')).toBe(true)
         
-        #browser.pause()
-        #
-        #@page.clickUserRow('brubble')
-        #expect(form.isEnabled()).toBe(true)
-        #expect(form.username.getAttribute('value')).toBe('brubble')
+        @page.clickUserRow('brubble')
+        expect(form.isEnabled()).toBe(true)
+        expect(form.username.getAttribute('value')).toBe('brubble')
+        form.username.clear()
+        form.username.sendKeys('brubble2')
+        form.cancel.click()
+        expect(form.isEnabled()).toBe(false)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(6)
+        expect(@page.checkUserRow('brubble')).toBe(true)
+        expect(@page.checkUserRow('brubble2')).toBe(false)
         
+        @page.clickUserRow('robin')
+        expect(form.isEnabled()).toBe(true)
+        expect(form.username.getAttribute('value')).toBe('robin')
+        form.username.clear()
+        form.username.sendKeys('bwonder')
+        form.save.click()
+        expect(form.isEnabled()).toBe(true)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(6)
+        expect(@page.checkUserRow('robin')).toBe(false)
+        expect(@page.checkUserRow('bwonder')).toBe(true)
+        
+        @page.userDelete.click()
+        expect(form.isEnabled()).toBe(false)
+        expect(@page.userTable.all(By.css('tr')).count()).toBe(5)
+        expect(@page.checkUserRow('bwonder')).toBe(false)
     )
 
 )

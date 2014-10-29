@@ -289,7 +289,7 @@
     return {
       scope: {
         list: '=',
-        selected: '=?',
+        selectedItem: '=?',
         selectedIndex: '=?',
         selectedId: '=?'
       },
@@ -297,7 +297,7 @@
       controller: 'flipTableController'
     };
   }).controller('flipTableController', function($scope, $attrs, $parse) {
-    var onSelectInvoker, selecting, update_selected;
+    var onSelectInvoker, updateIndex, updateItem;
     $scope.columns = $parse($attrs.columns)($scope);
     if (angular.isDefined($attrs.initSort)) {
       $scope.sort = $attrs.initSort;
@@ -308,7 +308,7 @@
     $scope.headers = $attrs.headers ? $parse($attrs.headers)($scope.$parent) : true;
     $scope.filters = {};
     onSelectInvoker = $attrs.onSelect ? $parse($attrs.onSelect) : angular.noop;
-    $scope.sort_click = function(col) {
+    $scope.sortClick = function(col) {
       if (col.attr === $scope.sort) {
         return $scope.reverse = !$scope.reverse;
       } else {
@@ -316,49 +316,47 @@
         return $scope.reverse = false;
       }
     };
-    $scope.selected = null;
-    $scope.select_click = function(item) {
-      if (item === $scope.selected) {
-        return $scope.selected = null;
+    $scope.selectedItem = null;
+    $scope.selectedId = null;
+    $scope.selectedIndex = null;
+    $scope.selectClick = function(item) {
+      var _id;
+      _id = item._id;
+      if (_id === $scope.selectedId) {
+        return $scope.selectedId = null;
       } else {
-        return $scope.selected = item;
+        return $scope.selectedId = _id;
       }
     };
-    selecting = [false, false, false];
-    $scope.$watch('selected', function() {
-      if (selecting[0]) {
-        return selecting[0] = false;
-      } else {
-        selecting = [false, true, true];
-        return update_selected($scope.selected);
+    $scope.oldSelectedId = null;
+    $scope.oldSelectedIndex = null;
+    $scope.oldSelectedItem = null;
+    $scope.monitorSelection = function() {
+      if ($scope.oldSelectedId !== $scope.selectedId) {
+        updateIndex();
+        updateItem();
+        return true;
       }
-    });
-    $scope.$watch('selectedIndex', function() {
-      if (selecting[1]) {
-        return selecting[1] = false;
-      } else {
-        selecting = [true, false, true];
-        return update_selected($scope.list[$scope.selectedIndex]);
+      if ($scope.oldSelectedIndex !== $scope.selectedIndex) {
+        $scope.selectedId = $scope.selectedIndex && $scope.list[$scope.selectedIndex]._id;
+        updateItem();
+        return true;
       }
-    });
-    $scope.$watch('selectedId', function() {
-      var item, _i, _len, _ref;
-      if (!$scope.selectedId) {
-        return update_selected(null);
+      if ($scope.oldSelectedItem !== $scope.selectedItem) {
+        $scope.selectedId = $scope.selectedItem && $scope.selectedItem._id;
+        updateIndex();
+        onSelectInvoker($scope.$parent, {
+          item: $scope.selectedItem
+        });
+        return true;
       }
-      if (selecting[2]) {
-        return selecting[2] = false;
-      } else {
-        selecting = [true, true, false];
-        _ref = $scope.list;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          item = _ref[_i];
-          if (item._id === $scope.selectedId) {
-            update_selected(item);
-            return;
-          }
-        }
-        return update_selected(null);
+      return false;
+    };
+    $scope.$watch('monitorSelection()', function(val) {
+      if (val) {
+        $scope.oldSelectedId = $scope.selectedId;
+        $scope.oldSelectedIndex = $scope.selectedIndex;
+        return $scope.oldSelectedItem = $scope.selectedItem;
       }
     });
     $scope.listkeys = function() {
@@ -372,36 +370,45 @@
       return result;
     };
     $scope.$watch('listkeys()', function() {
+      return updateItem();
+    });
+    updateItem = function() {
       var item, _i, _len, _ref;
       if ($scope.selectedId) {
-        selecting = [true, true, true];
         _ref = $scope.list;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           item = _ref[_i];
           if (item._id === $scope.selectedId) {
-            $scope.selected = item;
+            $scope.selectedItem = item;
+            onSelectInvoker($scope.$parent, {
+              item: item
+            });
             return;
           }
         }
-        return $scope.selected = null;
-      }
-    });
-    return update_selected = function(item) {
-      if (angular.isDefined(item) && item !== null) {
-        $scope.selected = item;
-        $scope.selectedIndex = $scope.list.indexOf(item);
-        $scope.selectedId = item._id;
+        return $scope.selectedItem = null;
       } else {
-        $scope.selected = null;
-        $scope.selectedIndex = null;
-        $scope.selectedId = null;
+        return $scope.selectedItem = null;
       }
-      return onSelectInvoker($scope.$parent, {
-        item: item
-      });
+    };
+    return updateIndex = function() {
+      var item, _i, _len, _ref;
+      if ($scope.selectedId) {
+        _ref = $scope.list;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          if (item._id === $scope.selectedId) {
+            $scope.selectedIndex = $scope.list.indexOf(item);
+            return;
+          }
+        }
+        return $scope.selectedItem = null;
+      } else {
+        return $scope.selectedItem = null;
+      }
     };
   }).run(function($templateCache) {
-    return $templateCache.put("template/flipTable.html", "<table class=\"table table-hover\">\n    <thead ng-if=\"headers\">\n    <tr>\n        <th ng-repeat=\"col in columns\" ng-style=\"col.width ? {width: col.width} : {}\">\n            <div>\n                <span ng-click=\"$parent.sort_click(col)\">\n                    {{col.title}}\n                    <span class=\"glyphicon glyphicon-chevron-up\" ng-show=\"sort == col.attr && !reverse\"></span>\n                    <span class=\"glyphicon glyphicon-chevron-down\" ng-show=\"sort == col.attr && reverse\"></span>\n                </span>\n                <span class=\"glyphicon glyphicon-search\" ng-click=\"visible=!visible\"></span>\n            </div>\n            <div collapse=\"!visible\">\n                <input class=\"form-control\" ng-model=\"$parent.filters[col.attr]\" style=\"font-weight: normal\"></input>\n            </div>\n        </th>\n    </tr>\n    </thead>\n    <tbody>\n        <tr ng-repeat=\"item in list | filter:filters | orderBy:sort:reverse\"\n          ng-click=\"$parent.select_click(item)\"\n          ng-class=\"{'info': $parent.selected == item}\"\n          ng-style=\"col.width ? {width: col.width} : {}\"\n        >\n            <td ng-repeat=\"col in columns\">\n                <a ng-if=\"col.url_attr\" href=\"{{ item[col.url_attr] }}\">{{ item | flipDisplay:col }}</a>\n                <span ng-if=\"!col.url_attr\">{{ item | flipDisplay:col }}</span>\n            </td>\n        </tr>\n    </tbody>\n</table>        ");
+    return $templateCache.put("template/flipTable.html", "<table class=\"table table-hover\">\n    <thead ng-if=\"headers\">\n    <tr>\n        <th ng-repeat=\"col in columns\" ng-style=\"col.width ? {width: col.width} : {}\">\n            <div>\n                <span ng-click=\"$parent.sortClick(col)\">\n                    {{col.title}}\n                    <span class=\"glyphicon glyphicon-chevron-up\" ng-show=\"sort == col.attr && !reverse\"></span>\n                    <span class=\"glyphicon glyphicon-chevron-down\" ng-show=\"sort == col.attr && reverse\"></span>\n                </span>\n                <span class=\"glyphicon glyphicon-search\" ng-click=\"visible=!visible\"></span>\n            </div>\n            <div collapse=\"!visible\">\n                <input class=\"form-control\" ng-model=\"$parent.filters[col.attr]\" style=\"font-weight: normal\"></input>\n            </div>\n        </th>\n    </tr>\n    </thead>\n    <tbody>\n        <tr ng-repeat=\"item in list | filter:filters | orderBy:sort:reverse\"\n          ng-click=\"$parent.selectClick(item)\"\n          ng-class=\"{'info': $parent.selectedId == item._id}\"\n          ng-style=\"col.width ? {width: col.width} : {}\"\n        >\n            <td ng-repeat=\"col in columns\">\n                <a ng-if=\"col.url_attr\" href=\"{{ item[col.url_attr] }}\">{{ item | flipDisplay:col }}</a>\n                <span ng-if=\"!col.url_attr\">{{ item | flipDisplay:col }}</span>\n            </td>\n        </tr>\n    </tbody>\n</table>        ");
   });
 
 }).call(this);

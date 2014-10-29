@@ -140,26 +140,30 @@ angular.module( 'app.home', [
 
   # User Event Handling
 
+  newstate = false
   s.$watch('selectedUserId', ->
     if s.selectedUserId
       s.bufferUser = flipDoc(idLookup(s.users, s.selectedUserId))
+    else if newstate
+      newstate = false
     else
       s.bufferUser = null
   )
 
   $scope.onUserNew = () ->
+    s.bufferUser = flipDoc('users')
+    if $scope.selectedUserId != null
+      newstate = true
     $scope.selectedUserId = null
-    $scope.bufferUser = flipDoc('users')
 
   $scope.onUserCancel = () ->
     $scope.selectedUserId = null
-    $scope.bufferUser = null
+    s.bufferUser = null
 
   $scope.onUserDelete = () ->
     $scope.bufferUser.$delete()
     .then( () ->
       $scope.selectedUserId = null
-      $scope.bufferUser = null
       updateData()
     )
   
