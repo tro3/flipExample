@@ -1,6 +1,6 @@
 
 express = require('express')
-flip = require('./flipServer')
+flip = require('./flipNode')
 p = console.log
 
 endpoints =
