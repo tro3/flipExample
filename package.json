@@ -1,0 +1,26 @@
+{
+  "author": "Trey Roessig",
+  "name": "flipNode",
+  "version": "0.1.0",
+  "homepage": "https://github.com/tro3/flipNode",
+  "licenses": {
+    "type": "MIT"
+  },
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "debug": "",
+    "deep-diff": "^0.3.0",
+    "express": "^4.12.3",
+    "mongodb": "2",
+    "mpath": "",
+    "primus": "^3.0.2",
+    "q": "",
+    "sockjs": "^0.3.15"
+  },
+  "devDependencies": {
+    "chai": "",
+    "node-inspector": "",
+    "sinon": "^1.13.0",
+    "supertest": "^0.15.0"
+  }
+}
