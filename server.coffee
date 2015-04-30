@@ -12,7 +12,8 @@ flip.prepDB conn, endpoints
 
 app = express()
 app.use (req, res, next) -> p req.method, req.url; next()
-app.use express.static('app/dist') 
+#app.use express.static('app/dist')
+app.use express.static('app/build')
 app.use '/api', flip.api conn, endpoints
 
 server = app.listen 3000, ->
