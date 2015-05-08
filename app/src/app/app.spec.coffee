@@ -13,8 +13,8 @@ describe( 'Top-Level', () ->
       )
     ))
 
-    it('should pass a dummy test', () ->
-      expect(@ctrl).toBeTruthy()
-    )
+    #it('should pass a dummy test', () ->
+    #  expect(@ctrl).toBeTruthy()
+    #)
   )
 )

@@ -3,5 +3,7 @@ h1 Home
 .jumbotron
   h2 Testing: {{test}}
   
+  button(ng-click='refresh()') Refresh
+  
   ul
     li(ng-repeat="user in users") {{user.name}}
