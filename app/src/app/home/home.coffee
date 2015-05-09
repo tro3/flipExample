@@ -18,4 +18,4 @@ angular.module( 'app.home', [
   s.users.$get()
   s.users.$setActive()
   
-  s.refresh = -> console.log s.users; s.users.$get()
+  s.refresh = -> s.users.$get()
